@@ -1,34 +1,31 @@
-let Gameboard = {gameboard: []}
+const Gameboard = {gameboard: []}
 
-const displayGameboard = (() => {
+const displayGameboard = (() => {//fuction for adding on the webpage gameboard in form of table
 const div = document.querySelector('div')
 const table = document.createElement('table')
 let counter = 0
-for (let i = 0; i < 3; i++) {
-const row = document.createElement('tr')
-for (let k = 0; k < 3; k++) {
-const cell = document.createElement('td')
-cell.dataset.number = `${counter}`
-cell.textContent = Gameboard.gameboard[counter]
-row.appendChild(cell)
-counter++
-}
-table.appendChild(row)
-}
+    for (let i = 0; i < 3; i++) {
+    const row = document.createElement('tr')
+        for (let k = 0; k < 3; k++) {
+        const cell = document.createElement('td')
+        cell.dataset.number = `${counter}`
+        row.appendChild(cell)
+        counter++
+        }
+    table.appendChild(row)
+    }
 div.appendChild(table)
 })()
 
-const players = (mark, name) => {
-const marker = (cell) => {
-    Gameboard.gameboard[cell.dataset.number] = mark
-    cell.textContent = mark
-}
-
+const players = (mark, name) => {//constructor for players
+    const marker = (cell) => {
+        Gameboard.gameboard[cell.dataset.number] = mark
+        cell.textContent = mark
+    }
 return {marker, mark, name}
 }
 
-
-function isWinner(player) {
+function isWinner(player) {//checking each player for the win
     const board = Gameboard.gameboard
     const markOfPlayer = player.mark
   return (board[0] === markOfPlayer && board[1] === markOfPlayer && board[2] === markOfPlayer
@@ -42,54 +39,56 @@ function isWinner(player) {
     )
 }
 
-function whoWinnerOrDraw() {
+function whoWinnerOrDraw() {//checking the game for the winner or draw and display the result of the game
     const display = document.querySelector('p')  
     //finding the winner
-    if (isWinner(firstPlayer)) display.textContent = `player ${firstPlayer.name} win. Congrats!`
-    else if (isWinner(secondPlayer)) display.textContent = `player ${secondPlayer.name} win. Congrats!`
+    if (isWinner(firstPlayer)) display.textContent = `player ${firstPlayer.name} had won. Congrats!`
+    else if (isWinner(secondPlayer)) display.textContent = `player ${secondPlayer.name} had won. Congrats!`
     //finding the draw
     else {
             for (let elem of Gameboard.gameboard) {//checking for absence of the undefined elements in the array-gameboard
-            if (!elem) return      
-    }
-    if (Gameboard.gameboard.length === 9) //checking for proper length of the array-gameboard
-    display.textContent = 'draw!'
+            if (!elem) return//elems of Gameboard must not be undefined      
+            }
+            if (Gameboard.gameboard.length === 9) display.textContent = 'draw!' //Gameboard must be filled
+            
     }
 }
 
-const mainflow = (() => {
-const body = document.querySelector('body')
+const mainFlow = (() => {
+
+const body = document.querySelector('body')//append two inputs for the players names
 for (let i = 1; i < 3; i++) {
 const input = document.createElement('input')
 input.placeholder = `enter name of the player #${i}`
 body.append(input)
 }
-const startRestartGame = document.querySelector('button')
+
+const startRestartGame = document.querySelector('button')// button for launching the game
 startRestartGame.addEventListener('click', () => {
-if (startRestartGame.textContent === 'restart') window.location.reload();
-startRestartGame.textContent = 'restart'
-const inputs = document.getElementsByTagName('input')
-if (inputs[0].value && inputs[1].value) {
-    window.firstPlayer = players('X', inputs[0].value)
+    if (startRestartGame.textContent === 'restart') window.location.reload() // restart or reload game
+    startRestartGame.textContent = 'restart'
+    const inputs = document.getElementsByTagName('input')
+    if (inputs[0].value && inputs[1].value) {//game can start if players input their names
+    window.firstPlayer = players('X', inputs[0].value) //creating players
     window.secondPlayer = players('0', inputs[1].value)
-    inputs[1].remove()
+    inputs[1].remove()//after creating playres imputs remove
     inputs[0].remove()
 }
 })
-    let counter = 1
+    let counter = 1 //for alternating moves of the players (even or odd)
     const cells = document.getElementsByTagName('td')
     const display = document.querySelector('p')
     for (let elem of cells) {    
-    elem.addEventListener('click', function func() {
-        if (!display.textContent) {
-    if (counter % 2 !== 0) firstPlayer.marker(elem)
-    else secondPlayer.marker(elem)
-    elem.removeEventListener('click', func)
-    counter += 1
-    whoWinnerOrDraw()
-}
-    }) 
-}
+        elem.addEventListener('click', function func() {
+            if (!display.textContent) {//code for marking table works only if the winner have not determined yet 
+                if (counter % 2 !== 0) firstPlayer.marker(elem)
+                else secondPlayer.marker(elem)
+        elem.removeEventListener('click', func)//avoding double marking
+        counter += 1
+        whoWinnerOrDraw()//checking for winner or draw
+            }
+        }) 
+    }
 })()
 
 
