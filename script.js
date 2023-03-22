@@ -66,14 +66,15 @@ body.append(input)
 const startRestartGame = document.querySelector('button')// button for launching the game
 startRestartGame.addEventListener('click', () => {
     if (startRestartGame.textContent === 'restart') window.location.reload() // restart or reload game
-    startRestartGame.textContent = 'restart'
     const inputs = document.getElementsByTagName('input')
     if (inputs[0].value && inputs[1].value) {//game can start if players input their names
+    startRestartGame.textContent = 'restart'
     window.firstPlayer = players('X', inputs[0].value) //creating players
     window.secondPlayer = players('0', inputs[1].value)
     inputs[1].remove()//after creating playres imputs remove
     inputs[0].remove()
-}
+    }
+    else alert('for begining game names of players must be added')
 })
     let counter = 1 //for alternating moves of the players (even or odd)
     const cells = document.getElementsByTagName('td')
