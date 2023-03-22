@@ -18,17 +18,15 @@ table.appendChild(row)
 div.appendChild(table)
 })()
 
-
 const players = (mark, name) => {
 const marker = (cell) => {
     Gameboard.gameboard[cell.dataset.number] = mark
     cell.textContent = mark
 }
-return {marker, name, mark}
+
+return {marker, mark, name}
 }
 
-let firstPlayer = players('X', 'Dima')
-let secondPlayer = players('0', 'Vita')
 
 function isWinner(player) {
     const board = Gameboard.gameboard
@@ -45,33 +43,58 @@ function isWinner(player) {
 }
 
 function whoWinnerOrDraw() {
+    const display = document.querySelector('p')  
     //finding the winner
-    if (isWinner(firstPlayer)) console.log('first player win')
-    else if (isWinner(secondPlayer)) console.log('second player win')
+    if (isWinner(firstPlayer)) display.textContent = `player ${firstPlayer.name} win!`
+    else if (isWinner(secondPlayer)) display.textContent = `player ${secondPlayer.name} win!`
     //finding the draw
     else {
             for (let elem of Gameboard.gameboard) {//checking for absence of the undefined elements in the array-gameboard
             if (!elem) return      
     }
     if (Gameboard.gameboard.length === 9) //checking for proper length of the array-gameboard
-    console.log('draw')
+    display.textContent = 'draw!'
     }
 }
 
-const mainFlow = (() => {
+const mainflow = (() => {
+const body = document.querySelector('body')
+for (let i = 1; i < 3; i++) {
+const input = document.createElement('input')
+input.placeholder = `enter name of the player #${i}`
+body.append(input)
+}
+const startRestartGame = document.querySelector('button')
+startRestartGame.addEventListener('click', () => {
+if (startRestartGame.textContent === 'restart') window.location.reload();
+startRestartGame.textContent = 'restart'
+const inputs = document.getElementsByTagName('input')
+if (inputs[0].value && inputs[1].value) {
+    window.firstPlayer = players('X', inputs[0].value)
+    window.secondPlayer = players('0', inputs[1].value)
+    inputs[1].remove()
+    inputs[0].remove()
+}
+})
     let counter = 1
     const cells = document.getElementsByTagName('td')
-    for (let elem of cells) {
+    const display = document.querySelector('p')
+    for (let elem of cells) {    
     elem.addEventListener('click', function func() {
+        if (!display.textContent) {
     if (counter % 2 !== 0) firstPlayer.marker(elem)
     else secondPlayer.marker(elem)
     elem.removeEventListener('click', func)
     counter += 1
-    console.log(Gameboard.gameboard)
     whoWinnerOrDraw()
-    })
-    }
-    })()
+}
+    }) 
+}
+})()
+
+
+
+
 
 
 
