@@ -45,8 +45,8 @@ function isWinner(player) {
 function whoWinnerOrDraw() {
     const display = document.querySelector('p')  
     //finding the winner
-    if (isWinner(firstPlayer)) display.textContent = `player ${firstPlayer.name} win!`
-    else if (isWinner(secondPlayer)) display.textContent = `player ${secondPlayer.name} win!`
+    if (isWinner(firstPlayer)) display.textContent = `player ${firstPlayer.name} win. Congrats!`
+    else if (isWinner(secondPlayer)) display.textContent = `player ${secondPlayer.name} win. Congrats!`
     //finding the draw
     else {
             for (let elem of Gameboard.gameboard) {//checking for absence of the undefined elements in the array-gameboard
