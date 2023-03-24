@@ -76,21 +76,58 @@ startRestartGame.addEventListener('click', () => {
     }
     else alert('for begining game names of players must be added')
 })
-    let counter = 1 //for alternating moves of the players (even or odd)
+    //let counter = 1 //for alternating moves of the players (even or odd)
     const cells = document.getElementsByTagName('td')
     const display = document.querySelector('p')
     for (let elem of cells) {    
         elem.addEventListener('click', function func() {
             if (!display.textContent) {//code for marking table works only if the winner have not determined yet 
-                if (counter % 2 !== 0) firstPlayer.marker(elem)
-                else secondPlayer.marker(elem)
+                firstPlayer.marker(elem)
+                computerChoise(cells)
         elem.removeEventListener('click', func)//avoding double marking
-        counter += 1
         whoWinnerOrDraw()//checking for winner or draw
+        console.log(Gameboard.gameboard)
             }
         }) 
     }
 })()
+
+const computerChoise = (cells) => {
+    let isThereEmpty = false
+    for (elem of cells) {
+        if (!elem.textContent) isThereEmpty = true
+    }
+    console.log(isThereEmpty)
+    if (isThereEmpty) {
+const randomFrom0To8 = Math.floor(Math.random() * 9)
+console.log(randomFrom0To8)
+if (!cells[randomFrom0To8].textContent) {
+    cells[randomFrom0To8].textContent = '0'
+    Gameboard.gameboard[randomFrom0To8] = '0'
+    console.log(Gameboard.gameboard)
+}
+else computerChoise (cells)
+}
+}
+
+
+/*
+const choiseModeGame = () => {
+    const buttons = document.getElementsByTagName('button')
+    for (const elem of buttons) {
+        elem.addEventListener('click', () => {
+            if (elem.textContent === 'player 1 vs player 2')
+            console.log('arise inputs for entering players name and button "start"')
+            else if (elem.textContent === 'player vs cpu') {
+                document.create
+            }
+        })
+    }
+}
+
+*/
+
+
 
 
 
