@@ -22,3 +22,8 @@ button, input {
 button {
     height: 50px;
 }
+
+#smallbutton {
+    width: 160px;
+    box-sizing: border-box;
+}
