@@ -1,7 +1,7 @@
 td {
     border: 1px solid black;
-    width: 100px;
-    height: 100px;
+    width: 150px;
+    height: 150px;
     text-align: center;
     
 }
@@ -14,7 +14,7 @@ body {
 }
 
 button, input {
-    width: 320px;
+    width: 470px;
     box-sizing: border-box;
     
 }
@@ -24,6 +24,6 @@ button {
 }
 
 #smallbutton {
-    width: 160px;
+    width: 235px;
     box-sizing: border-box;
 }
