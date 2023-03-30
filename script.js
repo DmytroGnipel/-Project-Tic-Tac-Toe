@@ -1,6 +1,6 @@
 const Gameboard = {gameboard: []}
 
-const displayGameboard = (() => {//fuction for adding on the webpage gameboard in form of table
+const displayGameboard = (() => {//function for adding on the webpage gameboard in form of table
 const div = document.querySelector('div')
 const table = document.createElement('table')
 let counter = 0
@@ -18,15 +18,42 @@ div.appendChild(table)
 })()
 
 const players = (mark, name) => {//constructor for players
+    function whoWinnerOrDraw() {//checking the game for the winner or draw and display the result of the game
+        function isWinner(player) {//checking each player for the win, return true or false
+            const board = Gameboard.gameboard
+            const markOfPlayer = player.mark
+          return (board[0] === markOfPlayer && board[1] === markOfPlayer && board[2] === markOfPlayer
+            || board[3] === markOfPlayer && board[4] === markOfPlayer && board[5] === markOfPlayer
+            || board[6] === markOfPlayer && board[7] === markOfPlayer && board[8] === markOfPlayer
+            || board[0] === markOfPlayer && board[4] === markOfPlayer && board[8] === markOfPlayer
+            || board[2] === markOfPlayer && board[4] === markOfPlayer && board[6] === markOfPlayer
+            || board[0] === markOfPlayer && board[3] === markOfPlayer && board[6] === markOfPlayer
+            || board[1] === markOfPlayer && board[4] === markOfPlayer && board[7] === markOfPlayer
+            || board[2] === markOfPlayer && board[5] === markOfPlayer && board[8] === markOfPlayer
+            )
+        }
+        const display = document.querySelector('p') 
+        //finding the winner
+        if (isWinner(firstPlayer)) display.textContent = `player ${firstPlayer.name} had won. Congrats!`
+        else if (isWinner(secondPlayer)) display.textContent = `player ${secondPlayer.name} had won. Congrats!`
+        //finding the draw
+        else {
+                for (let elem of Gameboard.gameboard) {//checking for absence of the undefined elements in the array-gameboard
+                if (!elem) return//elems of Gameboard must not be undefined      
+                }
+                if (Gameboard.gameboard.length === 9) display.textContent = 'draw!' //Gameboard must be filled     
+        }
+    }
     const display = document.querySelector('p')
     const marker = (cell) => {
-        if (!display.textContent) {//
+        if (!display.textContent) {//code for marking table works only if the winner have not determined yet 
         Gameboard.gameboard[cell.dataset.number] = mark
         cell.textContent = mark
+        whoWinnerOrDraw()//checking for winner or draw
         }
     }
     const computerChoise = (cells) => {
-        if (!display.textContent) {
+        if (!display.textContent) {//code for marking table works only if the winner have not determined yet
         let isThereEmpty = false
         for (elem of cells) {
             if (!elem.textContent) isThereEmpty = true
@@ -36,6 +63,7 @@ const players = (mark, name) => {//constructor for players
     if (!cells[randomFrom0To8].textContent) {
         cells[randomFrom0To8].textContent = mark
         Gameboard.gameboard[randomFrom0To8] = mark
+        whoWinnerOrDraw()//checking for winner or draw
     }
     else computerChoise (cells)
     }   
@@ -45,62 +73,34 @@ const players = (mark, name) => {//constructor for players
 return {marker, mark, name, computerChoise}
 }
 
-function isWinner(player) {//checking each player for the win, return true or false
-    const board = Gameboard.gameboard
-    const markOfPlayer = player.mark
-  return (board[0] === markOfPlayer && board[1] === markOfPlayer && board[2] === markOfPlayer
-    || board[3] === markOfPlayer && board[4] === markOfPlayer && board[5] === markOfPlayer
-    || board[6] === markOfPlayer && board[7] === markOfPlayer && board[8] === markOfPlayer
-    || board[0] === markOfPlayer && board[4] === markOfPlayer && board[8] === markOfPlayer
-    || board[2] === markOfPlayer && board[4] === markOfPlayer && board[6] === markOfPlayer
-    || board[0] === markOfPlayer && board[3] === markOfPlayer && board[6] === markOfPlayer
-    || board[1] === markOfPlayer && board[4] === markOfPlayer && board[7] === markOfPlayer
-    || board[2] === markOfPlayer && board[5] === markOfPlayer && board[8] === markOfPlayer
-    )
-}
-
-function whoWinnerOrDraw() {//checking the game for the winner or draw and display the result of the game
-    const display = document.querySelector('p')  
-    //finding the winner
-    if (isWinner(firstPlayer)) display.textContent = `player ${firstPlayer.name} had won. Congrats!`
-    else if (isWinner(secondPlayer)) display.textContent = `player ${secondPlayer.name} had won. Congrats!`
-    //finding the draw
-    else {
-            for (let elem of Gameboard.gameboard) {//checking for absence of the undefined elements in the array-gameboard
-            if (!elem) return//elems of Gameboard must not be undefined      
-            }
-            if (Gameboard.gameboard.length === 9) display.textContent = 'draw!' //Gameboard must be filled
-            
-    }
-}
-
-const twoPlayers = () => {
-    let counter = 1 //for alternating moves of the players (even or odd)
-    const cells = document.getElementsByTagName('td')
-    const display = document.querySelector('p')
-    for (let elem of cells) {    
-        elem.addEventListener('click', function func() {
-            if (!display.textContent) {//code for marking table works only if the winner have not determined yet 
-                if (counter % 2 !== 0) firstPlayer.marker(elem)
-                else secondPlayer.marker(elem)
-                counter++
-        elem.removeEventListener('click', func)//avoding double marking
-        whoWinnerOrDraw()//checking for winner or draw
-            }
-        }) 
-    }
-}
-
-
-
 const choiseModeGame = () => {
     const buttons = document.getElementsByTagName('button')
     const body = document.querySelector('body')
     const cells = document.getElementsByTagName('td')
+    const remover = (array) => {
+for (const elem of array) elem.remove()
+    }
     for (const elem of buttons) {
         elem.addEventListener('click', () => {
+
+            const twoPlayers = () => {
+                let counter = 1 //for alternating moves of the players (even or odd)
+                const display = document.querySelector('p')
+                for (let elem of cells) {    
+                    elem.addEventListener('click', function func() {
+                        
+                            if (counter % 2 !== 0) firstPlayer.marker(elem)
+                            else secondPlayer.marker(elem)
+                            counter++
+                    elem.removeEventListener('click', func)//avoding double marking
+                    
+                    }) 
+                }
+            }
+
             //while button 'player 1 vs player 2' pressed
             if (elem.textContent === 'player 1 vs player 2') {
+                
                 for (let i = 1; i < 3; i++) {
                     const input = document.createElement('input')
                     input.placeholder = `enter name of the player #${i}`
@@ -109,8 +109,7 @@ const choiseModeGame = () => {
                 const buttonStartRestart = document.createElement('button')
                 buttonStartRestart.textContent = 'start'
                 body.append(buttonStartRestart)
-                buttons[1].remove()
-                buttons[0].remove()
+                remover([buttons[1], buttons[0]])
                 buttonStartRestart.addEventListener('click', () => {
                     if (buttonStartRestart.textContent === 'restart') window.location.reload() // restart or reload game
                         const inputs = document.getElementsByTagName('input')
@@ -118,8 +117,8 @@ const choiseModeGame = () => {
                         buttonStartRestart.textContent = 'restart'
                         window.firstPlayer = players('X', inputs[0].value) //creating players
                         window.secondPlayer = players('0', inputs[1].value)
-                        inputs[1].remove()//after creating playres inputs remove
-                        inputs[0].remove()
+                        remover([inputs[1], inputs[0]])
+                        
                         }
                         else alert('for begining game names of players must be added')
                     })
@@ -140,61 +139,48 @@ const choiseModeGame = () => {
                 buttonStartRestart.textContent = 'start'
                 divForWeapons.append(buttonsWeaponX, buttonsWeapon0)
                 body.append(inputForName, divForWeapons, buttonStartRestart)
-                buttons[1].remove()
-                buttons[0].remove()
+                remover([buttons[1], buttons[0]])
                 //when button with 'X' pressed
                 buttonsWeaponX.addEventListener('click', () => {
                     if (inputForName.value) {
                     window.firstPlayer = players('X', inputForName.value)
                     window.secondPlayer = players('0', 'comp')
                     buttonsWeaponX.textContent = `got it, ${firstPlayer.name}. Press start`
-                buttonStartRestart.addEventListener('click', () => {             
-                buttonsWeaponX.remove()
-                buttonsWeapon0.remove()
-                inputForName.remove()
-                buttonStartRestart.remove()
-                
+                buttonStartRestart.addEventListener('click', () => {
+                    if (buttonStartRestart.textContent === 'restart') window.location.reload()
+                    buttonStartRestart.textContent = 'restart'
+                remover([buttonsWeaponX, buttonsWeapon0, inputForName])                  
                 for (const elem of cells) {
                     elem.addEventListener('click', function func() {
                     firstPlayer.marker(elem)
                     secondPlayer.computerChoise(cells)
-                    whoWinnerOrDraw()
                     elem.removeEventListener('click', func)
                     })
-                }
-                
-                
+                }          
                 })
                     }
-                    
                 })
-                
-                //when button with '0' pressed
+                //when button with '0' is pressed
                 buttonsWeapon0.addEventListener('click', () => {
                     if (inputForName.value){
                         window.firstPlayer = players('X', 'comp')
                         window.secondPlayer = players('0', inputForName.value)
                         buttonsWeapon0.textContent = `got it, ${secondPlayer.name}. Press start`
-                buttonStartRestart.addEventListener('click', () => {             
-                buttonsWeaponX.remove()
-                buttonsWeapon0.remove()
-                inputForName.remove()
-                buttonStartRestart.remove()
-                firstPlayer.computerChoise(cells)
+                buttonStartRestart.addEventListener('click', () => {
+                    if (buttonStartRestart.textContent === 'restart') window.location.reload()
+                    buttonStartRestart.textContent = 'restart'
+                    remover([buttonsWeaponX, buttonsWeapon0, inputForName])             
+                    firstPlayer.computerChoise(cells)
                     for (const elem of cells) {
                     elem.addEventListener('click', function func() {
                     secondPlayer.marker(elem)
-                    whoWinnerOrDraw()
                     firstPlayer.computerChoise(cells)
-                    whoWinnerOrDraw()
                     elem.removeEventListener('click', func)
                 })
                     }
                 })
                 }
                 })
-
-            
             }
         })
     }
